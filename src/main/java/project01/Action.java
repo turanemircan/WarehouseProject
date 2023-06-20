@@ -1,9 +1,13 @@
 package project01;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Action {
+    public static final String R = "\u001B[31m";
+    public static final String B = "\u001B[34m";
+
     public static Scanner input = new Scanner(System.in);
     static int id;
 
@@ -12,7 +16,20 @@ public class Action {
     public static  void entry(){
         System.out.println("Giris menu");// kübra Hocam
 
-        System.out.println("Lütfen yapmak istediginiz Islemi seciniz");
+
+        System.out.println(R + "========================== İŞLEMLER =======================\r\n"
+                + "   ____________________             ____________________          \n"
+                + "   | 1-Ürün Girisi      |           |  2-Ürün Tanimla  |          \n"
+                + "   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯             ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯          \n"
+                + "   ____________________             ____________________          \n"
+                + "   | 3-Ürünleri  Listele |         | 4-Ürünleri Rafa Koy |        \n"
+                + "   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯             ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯         \n"
+                + "   | 5-Ürün Cikisi       |                                       \n"
+                + "   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯             ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯         \n" + B);
+
+        System.out.print("ISLEM SECİNİZ : ");
+
+
 
         String secim = input.next();
 
@@ -49,7 +66,7 @@ public class Action {
 
 
     public static void defineProduct(){
-        System.out.print("uruni smini giriniz : ");
+        System.out.print("uruni ismini giriniz : ");
         String productName = input.nextLine();
 
         input.nextLine();
@@ -70,6 +87,11 @@ public class Action {
         actions.put(id, product);
         System.out.println(id + " : " + actions.get(id));
         id++;
+        System.out.println("Ürün eklemeye devam etmek ister misiniz? E/H girin!");
+        String cevap = input.next().toUpperCase();
+        if (cevap.equals("E")){
+            defineProduct();
+        }
 
 
     }
