@@ -14,8 +14,6 @@ public class Action {
     static HashMap<Integer, Urunler> actions = new HashMap<Integer, Urunler>();
 
     public static  void entry(){
-        System.out.println("Giris menu");// kübra Hocam
-
 
         System.out.println(R + "========================== İŞLEMLER =======================\r\n"
                 + "   ____________________             ____________________          \n"
