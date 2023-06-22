@@ -13,6 +13,8 @@ public class Action {
 
     static HashMap<Integer, Urunler> actions = new HashMap<Integer, Urunler>();
 
+
+
     public static  void entry(){
 
         System.out.println(R + "========================== İŞLEMLER =======================\r\n"
@@ -49,7 +51,7 @@ public class Action {
                 //entry();
                 break;
             case "5":
-                //urunCikisi();
+                productOut();
                 //entry();
                 break;
 
@@ -64,9 +66,9 @@ public class Action {
 
 
     public static void defineProduct(){
-        System.out.print("uruni ismini giriniz : ");
+        System.out.print("urun ismini giriniz : ");
         String productName = input.nextLine();
-
+        System.out.print("");
         input.nextLine();
         System.out.print("uretici bilgisi giriniz : ");
         String producter = input.nextLine();
@@ -92,5 +94,45 @@ public class Action {
         }
 
 
+
+    }
+    public static void assignShelf(){
+        System.out.println("Lütfen rafa koymak istediginiz ürünün id girin");
+         int id =input.nextInt();
+        if (actions.get(id).getShelf() == null){
+            System.out.println("Lutfen raf numarasini giriniz...");
+            String shelf = input.nextLine();
+            actions.get(id).setShelf(shelf);
+            System.out.println("id : "+ id + "raf : " + shelf );
+        }else if(actions.get(id).getShelf() != null)
+
+        System.out.println("ID:"  + actions.get(id) +  "Raf:" )  ;
+        //listOfProduct();
+    }
+    public static void productOut(){
+
+        //System.out.println(urunListele());
+
+        System.out.print("Sectiginiz urun id giriniz: ");
+        int id = input.nextInt();
+
+        System.out.print("Cikarmak istediğiniz miktari giriniz: ");
+        int amount = input.nextInt();
+
+        if (actions.containsKey(id)){
+            Urunler product = actions.get(id);
+            int availableAmount = product.getAmount();
+            if (availableAmount >= amount){
+                int newAmount = availableAmount - amount;
+                product.setAmount(newAmount);
+                if (newAmount == 0){
+                    product.setShelf(null);
+                }
+            } else {
+                System.out.println("Yeterli miktarda ürün bulunmamaktadır.");
+            }
+        } else {
+            System.out.println("Bu ID'ye sahip bir ürün tanımlanmamış.");
+        }
     }
 }
