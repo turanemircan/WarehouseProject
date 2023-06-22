@@ -7,11 +7,11 @@ public class Action {
     public static final String B = "\u001B[34m";
 
     public static Scanner input = new Scanner(System.in);
-    static int id;
+    static int id=100;
 
     static HashMap<Integer, Urunler> actions = new HashMap<Integer, Urunler>();
 
-    public static void mainmenu(){
+    public static void mainMenu(){
         final String ANSI_RESET = "\u001B[0m";
         final String ANSI_CYAN = "\u001B[36m";
         final String ANSI_YELLOW = "\u001B[33m";
@@ -24,10 +24,9 @@ public class Action {
     }
     public static void homepage(){
 
-        System.out.println("Select the desired operation in the application.");
         int choice;
 
-        do { mainmenu();
+        do { mainMenu();
             choice= input.nextByte();
 
             switch (choice) {
@@ -48,6 +47,7 @@ public class Action {
                     productOut();
                     break;
                 case 6:
+                    System.out.println("Umarim bu son olur");
                     System.exit(6);
                 default:
                     System.out.println("The choice is incorrect.\n Please try again.");
@@ -60,10 +60,9 @@ public class Action {
 
     public static void defineProduct(){
         input.nextLine();
-        System.out.println();
         System.out.print("urun ismini giriniz : ");
         String productName = input.nextLine();
-        //input.nextLine();
+
 
         System.out.print("uretici bilgisi giriniz : ");
         String producter = input.nextLine();
@@ -92,39 +91,42 @@ public class Action {
 
     }
     public static void assignShelf(){
+        listOfProduct();
         System.out.println("Lütfen rafa koymak istediginiz ürünün id girin");
           int id =input.nextInt();
-        if (actions.get(id).getShelf() == null){
+        if (actions.get(id).getShelf().equals(null) ){ // if girmiyor yada null atamasi olmuyor
             System.out.println("Lutfen raf numarasini giriniz...");
             String shelf = input.nextLine();
             actions.get(id).setShelf(shelf);
             System.out.println("id : "+ id + "raf : " + shelf );
         }else if(actions.get(id).getShelf() != null)
 
-        System.out.println("ID:"  + actions.get(id) +  "Raf: " +actions)  ;
+        System.out.println("ID:"  + actions.get(id) +  "Raf: " + actions.get(id).getShelf())  ;
         listOfProduct();
     }
     public static void productOut(){
-
-        //System.out.println(listOfProduct ());
-
+       listOfProduct();
         System.out.print("Sectiginiz urun id giriniz: ");
         int id = input.nextInt();
 
-        System.out.print("Cikarmak istediğiniz miktari giriniz: ");
-        int amount = input.nextInt();
+
+
 
         if (actions.containsKey(id)){
             Urunler product = actions.get(id);
             int availableAmount = product.getAmount();
+            System.out.print("Cikarmak istediğiniz miktari giriniz: ");
+            int amount = input.nextInt();
             if (availableAmount >= amount){
                 int newAmount = availableAmount - amount;
                 product.setAmount(newAmount);
+                System.out.println("depoda kalan ürün miktari : " + newAmount);
                 if (newAmount == 0){
                     product.setShelf(null);
                 }
             } else {
                 System.out.println("Yeterli miktarda ürün bulunmamaktadır.");
+                productOut();
             }
         } else {
             System.out.println("Bu ID'ye sahip bir ürün tanımlanmamış.");
