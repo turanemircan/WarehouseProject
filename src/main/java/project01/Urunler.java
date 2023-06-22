@@ -2,7 +2,7 @@ package project01;
 
 public class Urunler {
 
-    private String productName;
+    private String productName= null;
     private String producter;
     private int amount;
     private String unit;

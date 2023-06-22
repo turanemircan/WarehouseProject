@@ -1,8 +1,6 @@
 package project01;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
 
 public class Action {
     public static final String R = "\u001B[31m";
@@ -13,63 +11,61 @@ public class Action {
 
     static HashMap<Integer, Urunler> actions = new HashMap<Integer, Urunler>();
 
+    public static void mainmenu(){
+        final String ANSI_RESET = "\u001B[0m";
+        final String ANSI_CYAN = "\u001B[36m";
+        final String ANSI_YELLOW = "\u001B[33m";
 
+        System.out.println(ANSI_CYAN + "Select the desired operation in the application." + ANSI_RESET);
+        System.out.println("Options:");
+        System.out.println(ANSI_YELLOW + "1. Define Product" + ANSI_RESET + "\t\t" + ANSI_YELLOW + "2. List Product" + ANSI_RESET);
+        System.out.println(ANSI_YELLOW + "3. Inbound Product" + ANSI_RESET + "\t\t" + ANSI_YELLOW + "4. Assign Shelf Number" + ANSI_RESET);
+        System.out.println(ANSI_YELLOW + "5. Outbound Product" + ANSI_RESET + "\t\t" + ANSI_YELLOW + "6. Exit" + ANSI_RESET);
+    }
+    public static void homepage(){
 
-    public static  void entry(){
+        System.out.println("Select the desired operation in the application.");
+        int choice;
 
-        System.out.println(R + "========================== İŞLEMLER =======================\r\n"
-                + "   ____________________             ____________________          \n"
-                + "   | 1-Ürün Girisi      |           |  2-Ürün Tanimla  |          \n"
-                + "   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯             ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯          \n"
-                + "   ____________________             ____________________          \n"
-                + "   | 3-Ürünleri  Listele |         | 4-Ürünleri Rafa Koy |        \n"
-                + "   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯             ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯         \n"
-                + "   | 5-Ürün Cikisi       |                                       \n"
-                + "   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯             ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯         \n" + B);
+        do { mainmenu();
+            choice= input.nextByte();
 
-        System.out.print("ISLEM SECİNİZ : ");
+            switch (choice) {
+                case 1:
+                    defineProduct();
+                    break;
+                case 2:
+                    listOfProduct ();
+                    break;
+                case 3:
+                    System.out.println("Please enter the ID of the product you want to inbound.");
+                    //method
+                    break;
+                case 4:
+                    assignShelf();
+                    break;
+                case 5:
+                    System.out.println("Please enter the product you want to outbound");
+                    //method
+                    break;
+                case 6:
+                    System.exit(6);
+                default:
+                    System.out.println("The choice is incorrect.\n Please try again.");
 
-
-
-        String secim = input.next();
-
-        switch (secim){
-            case "1":
-                //inbound();
-                //entry();
-                break;
-            case "2":
-                defineProduct();
-                entry();
-                break;
-            case "3":
-                //urunListele();
-               // entry();
-                break;
-            case "4":
-                //urunuRafaKoy();
-                //entry();
-                break;
-            case "5":
-                productOut();
-                //entry();
-                break;
-
-
-
-
-        }
-
+            }
+        } while (true);
 
     }
 
 
-
     public static void defineProduct(){
+        input.nextLine();
+        System.out.println();
         System.out.print("urun ismini giriniz : ");
         String productName = input.nextLine();
-        System.out.print("");
-        input.nextLine();
+        //input.nextLine();
+
         System.out.print("uretici bilgisi giriniz : ");
         String producter = input.nextLine();
 
@@ -98,7 +94,7 @@ public class Action {
     }
     public static void assignShelf(){
         System.out.println("Lütfen rafa koymak istediginiz ürünün id girin");
-         int id =input.nextInt();
+          int id =input.nextInt();
         if (actions.get(id).getShelf() == null){
             System.out.println("Lutfen raf numarasini giriniz...");
             String shelf = input.nextLine();
@@ -106,12 +102,12 @@ public class Action {
             System.out.println("id : "+ id + "raf : " + shelf );
         }else if(actions.get(id).getShelf() != null)
 
-        System.out.println("ID:"  + actions.get(id) +  "Raf:" )  ;
-        //listOfProduct();
+        System.out.println("ID:"  + actions.get(id) +  "Raf: " +actions)  ;
+        listOfProduct();
     }
     public static void productOut(){
 
-        //System.out.println(urunListele());
+        //System.out.println(listOfProduct ());
 
         System.out.print("Sectiginiz urun id giriniz: ");
         int id = input.nextInt();
@@ -134,5 +130,18 @@ public class Action {
         } else {
             System.out.println("Bu ID'ye sahip bir ürün tanımlanmamış.");
         }
+    }
+    public static void listOfProduct (){
+
+        System.out.printf("%-5s %-10s %-10s %-10s %-10s %-10s%n", "ID", "ISMI", "URETICISI", "MIKTARI", "BIRIMI", "RAF");
+        System.out.println("-----------------------------------------------------------------------------------");
+
+        Set<Map.Entry<Integer, Urunler>> actionList= actions.entrySet();
+
+        for (Map.Entry<Integer,Urunler> w: actionList){
+            System.out.print(w.getKey()+ "\t");
+            System.out.println(w.getValue());
+        }
+
     }
 }
