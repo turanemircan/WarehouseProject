@@ -45,8 +45,7 @@ public class Action {
                     assignShelf();
                     break;
                 case 5:
-                    System.out.println("Please enter the product you want to outbound");
-                    //method
+                    productOut();
                     break;
                 case 6:
                     System.exit(6);
