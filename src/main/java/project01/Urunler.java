@@ -64,16 +64,21 @@ public class Urunler {
         this.shelf = shelf;
 
     }
-
     @Override
     public String toString() {
+        String shelfString = null;
+        if (shelf == null) {
+            shelfString= "null" +shelf;
+        }
         return "Urunler{" +
                 "productName='" + productName + '\'' +
                 ", producter='" + producter + '\'' +
                 ", amount=" + amount +
                 ", unit='" + unit + '\'' +
-                ", shelf='" + shelf + '\'' +
+                ", shelf='" + shelfString + '\'' +
                 '}';
     }
+
+
 
 }
