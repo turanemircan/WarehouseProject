@@ -8,6 +8,7 @@ public class Action implements DefineProduct, Shelf, Listing,Homepage,InOutbound
     static int id=100;
 
     static HashMap<Integer, Product> actions = new HashMap<Integer, Product>();
+
     @Override
     public void mainMenu() {
         final String ANSI_RESET = "\u001B[0m";
@@ -21,43 +22,51 @@ public class Action implements DefineProduct, Shelf, Listing,Homepage,InOutbound
         System.out.println(ANSI_YELLOW + "5. Outbound Product" + ANSI_RESET + "\t\t" + ANSI_YELLOW + "6. Exit" + ANSI_RESET);
 
     }
-
     public void homepage() {
 
-        int choice;
+        String choice;
+
 
         do {
             mainMenu();
-            choice = input.nextByte();
+            choice = input.next();
 
-            switch (choice) {
-                case 1:
-                    defineProduct();
-                    break;
-                case 2:
-                    listing();
-                    break;
-                case 3:
-                    inboundProdct();
-                    break;
-                case 4:
-                    assignShelf();
-                    break;
-                case 5:
-                    try {
-                        productOut();
-                    } catch (NoSuchElementException e) {
-                        System.err.println(e.getMessage());
-                    } catch (IllegalArgumentException b) {
-                        System.err.println(b.getMessage());
-                    } productOut();
-                    break;
-                case 6:
-                    System.exit(6);
-                default:
-                    System.out.println("The choice is incorrect.\n Please try again.");
+                switch (choice) {
+                    case "1":
+                        defineProduct();
+                        break;
+                    case "2":
+                        listing();
+                        break;
+                    case "3":
+                        try{
+                            inboundProdct();
+                        }catch(InputMismatchException e){
+                            System.err.println("Sayi Yazmalisin");
+                        }catch(IllegalArgumentException e){
+                            System.err.println("Miktar Tam sayi ve pozitif olmalidir ");
+                        }
 
-            }
+                        break;
+                    case "4":
+                        assignShelf();
+                        break;
+                    case "5":
+                        try {
+                            productOut();
+                        } catch (NoSuchElementException e) {
+                            System.err.println(e.getMessage());
+                        } catch (IllegalArgumentException b) {
+                            System.err.println(b.getMessage());
+                        }
+                        break;
+                    case "6":
+                        System.exit(6);
+                    default:
+                        System.out.println("The choice is incorrect.\n Please try again.");
+
+                }
+
         } while (true);
     }
 
@@ -70,15 +79,12 @@ public class Action implements DefineProduct, Shelf, Listing,Homepage,InOutbound
         System.out.print("uretici bilgisi giriniz : ");
         String producter = input.nextLine();
 
-        System.out.print("urun miktar giriniz : ");
-        int amount = input.nextInt();
-        input.nextLine();
+        int amount = 0;
 
         System.out.print("urun birimi giriniz : ");
         String unit = input.nextLine();
 
-        System.out.print("urun icin raf  giriniz : ");
-        String shelf = input.nextLine();
+        String shelf = null;
 
         Product product = new Product(productName,producter, amount,unit,shelf);
         actions.put(id, product);
@@ -94,57 +100,89 @@ public class Action implements DefineProduct, Shelf, Listing,Homepage,InOutbound
     @Override
     public void assignShelf() {
         listing();
-        System.out.println("Lütfen rafa koymak istediginiz ürünün id girin");
-        int id =input.nextInt();
-        if (actions.get(id).getShelf()=="null" ){
-            System.out.println("Lutfen raf numarasini giriniz...");
-            String shelf = input.nextLine();
-            actions.get(id).setShelf(shelf);
-            System.out.println("id : "+ id + "raf : " + shelf );
-        }else if(actions.get(id).getShelf() != null)
+        System.out.println("Please enter the ID of the product that you want to assign to the shelf!");
+        try {
+            int id = input.nextInt();
+            input.nextLine();
 
-            System.out.println("ID:"  + actions.get(id) +  "Raf: " + actions.get(id).getShelf())  ;
+            if (!actions.containsKey(id)) {
+                throw new NoSuchElementException("No product found for the specified ID!");
+            }
 
+            Product product = actions.get(id);
+            if (product.getShelf() == null) {
+                System.out.println("Please enter the shelf number!");
+                String shelf = input.nextLine();
+
+                if (shelf.isEmpty()) {
+                    throw new IllegalArgumentException("Shelf number cannot be empty!");
+                }
+
+                product.setShelf(shelf);
+                System.out.println("ID : "+ id + "\nShelf : " + shelf );
+            } else {
+                throw new IllegalArgumentException(product.getShelf() + " is already assigned for this product.");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid ID format! Please enter a valid ID.");
+            input.nextLine(); // Clear the input buffer
+        } catch (IllegalArgumentException | NoSuchElementException e) {
+            System.out.println(e.getMessage());
+        }
     }
+
 
     @Override
     public void listing() {
+        System.out.println("-----------------------------------------------------------------");
+        System.out.printf("%-5s %-15s %-15s %-10s %-10s %-5s\n", "ID", "PRODUCT NAME", "PRODUCTER", "AMOUNT", "UNIT", "SHELF");
+        Set<Map.Entry<Integer, Product>> actionList = actions.entrySet();
+        System.out.println("-----------------------------------------------------------------");
 
-            System.out.println("------------------------------------------------------------");
-
-            System.out.printf("%-5s %-10s %-15s %-10s %-10s %-5s\n", "ID", "PRODUCT NAME", "PRODUCTER", "AMOUNT", "UNIT", "SHELF");
-            Set<Map.Entry<Integer, Product>> actionList = actions.entrySet();
-
-            System.out.println("------------------------------------------------------------");
-
-            for (Map.Entry<Integer, Product> w : actionList) {
-                System.out.printf("%-5d %-10s %-15s %-10d %-10s %-5s\n", w.getKey(), w.getValue().getProductName(),
-                        w.getValue().getProducter(), w.getValue().getAmount(), w.getValue().getUnit(), w.getValue().getShelf());
-            }
-
-            System.out.println("------------------------------------------------------------");
+        for (Map.Entry<Integer, Product> entry : actionList) {
+            Product product = entry.getValue();
+            System.out.printf("%-5d %-15s %-15s %-10d %-10s %-5s\n", entry.getKey(), product.getProductName(),
+                    product.getProducter(), product.getAmount(), product.getUnit(), product.getShelf());
         }
+
+        System.out.println("-----------------------------------------------------------------");
+    }
 
 
     @Override
     public void inboundProdct() {
         listing();
-
         System.out.print("Sectiginiz urun id giriniz: ");
-        int id = input.nextInt();
+        if (input.hasNextInt()){
+            int id = input.nextInt();
+            if (actions.containsKey(id)) {
+                System.out.println(actions.get(id).getAmount() + " " +
+                        actions.get(id).getUnit() + " depoda var." +
+                        "\nNe kadar miktar ekleyeceksiniz?");
 
-        if (actions.containsKey(id)) {
-            System.out.println(actions.get(id).getAmount() + " " +
-                               actions.get(id).getUnit() + " depoda var." +
-                               "\nNe kadar miktar ekleyeceksiniz?");
-            int amount = input.nextInt() + actions.get(id).getAmount();
-            actions.get(id).setAmount(amount);
-            System.out.println(actions.get(id).getAmount() + " " + actions.get(id).getUnit() + " depoda var.");
+                if (input.hasNextInt()){
+                    int amount = input.nextInt();
+                    if(amount>0){
+                        int newAmount=amount + actions.get(id).getAmount();
+                        actions.get(id).setAmount(amount);
+                        System.out.println(actions.get(id).getAmount() + " " + actions.get(id).getUnit() + " depoda var.");
+                    }else {
+                        throw new IllegalArgumentException("Miktarin negative degeri icin kullanilir");
+                    }
+
+                }else{
+                    throw new IllegalArgumentException("Sayi disinda miktar girilirse kullanilir");
+                }
 
 
-        } else {
-            System.out.println("Bu ID'ye sahip bir ürün tanımlanmamış.");
+            } else {
+                System.out.println("Bu ID'ye sahip bir ürün tanımlanmamış.");
+            }
+
+        }else {
+            throw new InputMismatchException("Id bir sayi olmalidir");
         }
+
 
     }
     @Override
