@@ -2,10 +2,10 @@ package project02;
 
 import java.util.*;
 
-public class Action implements DefineProduct, Shelf, Listing,Homepage,InOutbound{
+public class Action implements DefineProduct, Shelf, Listing, Homepage, InOutbound {
 
     public static Scanner input = new Scanner(System.in);
-    static int id=100;
+    static int id = 100;
 
     static HashMap<Integer, Product> actions = new HashMap<Integer, Product>();
 
@@ -22,6 +22,7 @@ public class Action implements DefineProduct, Shelf, Listing,Homepage,InOutbound
         System.out.println(ANSI_YELLOW + "5. Outbound Product" + ANSI_RESET + "\t\t" + ANSI_YELLOW + "6. Exit" + ANSI_RESET);
 
     }
+
     public void homepage() {
 
         String choice;
@@ -30,29 +31,29 @@ public class Action implements DefineProduct, Shelf, Listing,Homepage,InOutbound
             mainMenu();
             choice = input.next();
 
-                switch (choice) {
-                    case "1":
-                        defineProduct();
+            switch (choice) {
+                case "1":
+                    defineProduct();
 
-                        break;
-                    case "2":
-                        listing();
-                        break;
-                    case "3":
-                            inboundProdct();
-                        break;
-                    case "4":
-                        assignShelf();
-                        break;
-                    case "5":
-                            productOut();
-                        break;
-                    case "6":
-                        System.exit(6);
-                  default:
-                        System.out.println("The choice is incorrect.\n Please try again.");
+                    break;
+                case "2":
+                    listing();
+                    break;
+                case "3":
+                    inboundProdct();
+                    break;
+                case "4":
+                    assignShelf();
+                    break;
+                case "5":
+                    productOut();
+                    break;
+                case "6":
+                    System.exit(6);
+                default:
+                    System.out.println("The choice is incorrect.\n Please try again.");
 
-                }
+            }
 
         } while (true);
     }
@@ -73,13 +74,13 @@ public class Action implements DefineProduct, Shelf, Listing,Homepage,InOutbound
 
         String shelf = null;
 
-        Product product = new Product(productName,producter, amount,unit,shelf);
+        Product product = new Product(productName, producter, amount, unit, shelf);
         actions.put(id, product);
-        System.out.println(id + " : " + actions.get(id));
+        System.out.println("\tID: " + id   + actions.get(id));
         id++;
         System.out.println("Ürün eklemeye devam etmek ister misiniz? E/H girin!");
         String cevap = input.next().toUpperCase();
-        if (cevap.equals("E")){
+        if (cevap.equals("E")) {
             defineProduct();
         }
     }
@@ -88,10 +89,10 @@ public class Action implements DefineProduct, Shelf, Listing,Homepage,InOutbound
     public void assignShelf() {
         listing();
         System.out.println("Please enter the ID of the product that you want to assign to the shelf!");
+
         try {
             int id = input.nextInt();
             input.nextLine();
-
             if (!actions.containsKey(id)) {
                 throw new NoSuchElementException("No product found for the specified ID!");
             }
@@ -106,7 +107,7 @@ public class Action implements DefineProduct, Shelf, Listing,Homepage,InOutbound
                 }
 
                 product.setShelf(shelf);
-                System.out.println("ID : "+ id + "\nShelf : " + shelf );
+                System.out.println("ID : " + id + "\nShelf : " + shelf);
             } else {
                 throw new IllegalArgumentException(product.getShelf() + " is already assigned for this product.");
             }
@@ -139,75 +140,82 @@ public class Action implements DefineProduct, Shelf, Listing,Homepage,InOutbound
     @Override
     public void inboundProdct() {
         listing();
-        System.out.print("Sectiginiz urun id giriniz: ");
+        System.out.print("Please enter the ID of the product:");
         try {
-
-        if (input.hasNextInt()){
             int id = input.nextInt();
             if (actions.containsKey(id)) {
                 System.out.println(actions.get(id).getAmount() + " " +
                         actions.get(id).getUnit() + " depoda var." +
                         "\nNe kadar miktar ekleyeceksiniz?");
-
-                if (input.hasNextInt()){
+                if (input.hasNextInt()) {
                     int amount = input.nextInt();
-                    if(amount>0){
-                        int newAmount=amount + actions.get(id).getAmount();
+                    if (amount > 0) {
+                        int newAmount = amount + actions.get(id).getAmount();
                         actions.get(id).setAmount(amount);
                         System.out.println(actions.get(id).getAmount() + " " + actions.get(id).getUnit() + " depoda var.");
-                    }else {
+                    } else {
                         throw new IllegalArgumentException("Amount cannot to be negative");
                     }
 
-                }else{
+                } else {
                     throw new IllegalArgumentException("Amount must to be digit");
                 }
-
-
             } else {
                 throw new NoSuchElementException("No product found with this Id");
             }
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid ID format! Please enter a valid ID.");
+            input.nextLine();
 
-        }else {
-            throw new InputMismatchException("Id must to be digit");
-        }
-        } catch(InputMismatchException e){
-            System.out.println(e.getMessage());
-        } catch (IllegalArgumentException | NoSuchElementException e){
+        } catch (IllegalArgumentException | NoSuchElementException e) {
             System.out.println(e.getMessage());
 
         }
-
-
     }
+
     @Override
     public void productOut() throws NoSuchElementException {
         listing();
 
         System.out.print("Sectiginiz urun id giriniz: ");
-        int id = input.nextInt();
 
-        if (!actions.containsKey(id)) {
-            throw new NoSuchElementException("Belirtilen ID'ye sahip bir ürün bulunamadı.");
-        } else {
-            Product product = actions.get(id);
-            int availableAmount = product.getAmount();
-            System.out.print("Cikarmak istediğiniz miktari giriniz: ");
-            int amount = input.nextInt();
-            amount = Math.abs(amount);
-            if (availableAmount < amount) {
-                throw new IllegalArgumentException("Yeterli ürün bulunmamaktadır. Mevcut miktar: " + availableAmount);
-
+        try {
+                int id = input.nextInt();
+                input.nextLine();
+            if (!actions.containsKey(id)) {
+                throw new NoSuchElementException("Belirtilen ID'ye sahip bir ürün bulunamadı.");
             } else {
-                int newAmount = 0;
-                newAmount = availableAmount - amount;
-                product.setAmount(newAmount);
-                System.out.println("Güncel miktar: " + newAmount);
+                Product product = actions.get(id);
+                int availableAmount = product.getAmount();
+                System.out.print("Cikarmak istediğiniz miktari giriniz: ");
 
-                if (newAmount == 0) {
-                    product.setShelf(null);
+                if (!input.hasNextInt()) {
+
+                    throw new InputMismatchException("Amount must to be digit and positive");
+                }
+                int amount = input.nextInt();
+              if (amount<0){
+                  throw new IllegalArgumentException("Amount must to be positive");
+              }
+                if (availableAmount < amount) {
+                    throw new IllegalArgumentException("Yeterli ürün bulunmamaktadır. Mevcut miktar: " + availableAmount);
+
+                } else {
+                    int newAmount = 0;
+                    newAmount = availableAmount - amount;
+                    product.setAmount(newAmount);
+                    System.out.println("Güncel miktar: " + newAmount);
+
+                    if (newAmount == 0) {
+                        product.setShelf(null);
+                    }
                 }
             }
+        } catch (InputMismatchException e) {
+            System.err.println("Invalid ID format! Please enter a valid ID.");
+            input.nextLine();
+        } catch (IllegalArgumentException | NoSuchElementException e) {
+            System.err.println(e.getMessage());
         }
 
     }
