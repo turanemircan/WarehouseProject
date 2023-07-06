@@ -26,7 +26,6 @@ public class Action implements DefineProduct, Shelf, Listing,Homepage,InOutbound
 
         String choice;
 
-
         do {
             mainMenu();
             choice = input.next();
@@ -34,35 +33,23 @@ public class Action implements DefineProduct, Shelf, Listing,Homepage,InOutbound
                 switch (choice) {
                     case "1":
                         defineProduct();
+
                         break;
                     case "2":
                         listing();
                         break;
                     case "3":
-                        try{
                             inboundProdct();
-                        }catch(InputMismatchException e){
-                            System.err.println("Sayi Yazmalisin");
-                        }catch(IllegalArgumentException e){
-                            System.err.println("Miktar Tam sayi ve pozitif olmalidir ");
-                        }
-
                         break;
                     case "4":
                         assignShelf();
                         break;
                     case "5":
-                        try {
                             productOut();
-                        } catch (NoSuchElementException e) {
-                            System.err.println(e.getMessage());
-                        } catch (IllegalArgumentException b) {
-                            System.err.println(b.getMessage());
-                        }
                         break;
                     case "6":
                         System.exit(6);
-                    default:
+                  default:
                         System.out.println("The choice is incorrect.\n Please try again.");
 
                 }
@@ -153,6 +140,8 @@ public class Action implements DefineProduct, Shelf, Listing,Homepage,InOutbound
     public void inboundProdct() {
         listing();
         System.out.print("Sectiginiz urun id giriniz: ");
+        try {
+
         if (input.hasNextInt()){
             int id = input.nextInt();
             if (actions.containsKey(id)) {
@@ -167,20 +156,26 @@ public class Action implements DefineProduct, Shelf, Listing,Homepage,InOutbound
                         actions.get(id).setAmount(amount);
                         System.out.println(actions.get(id).getAmount() + " " + actions.get(id).getUnit() + " depoda var.");
                     }else {
-                        throw new IllegalArgumentException("Miktarin negative degeri icin kullanilir");
+                        throw new IllegalArgumentException("Amount cannot to be negative");
                     }
 
                 }else{
-                    throw new IllegalArgumentException("Sayi disinda miktar girilirse kullanilir");
+                    throw new IllegalArgumentException("Amount must to be digit");
                 }
 
 
             } else {
-                System.out.println("Bu ID'ye sahip bir ürün tanımlanmamış.");
+                throw new NoSuchElementException("No product found with this Id");
             }
 
         }else {
-            throw new InputMismatchException("Id bir sayi olmalidir");
+            throw new InputMismatchException("Id must to be digit");
+        }
+        } catch(InputMismatchException e){
+            System.out.println(e.getMessage());
+        } catch (IllegalArgumentException | NoSuchElementException e){
+            System.out.println(e.getMessage());
+
         }
 
 
