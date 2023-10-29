@@ -74,18 +74,7 @@ Not:
   + Çıkış yapılacak miktar raftaki miktardan fazla ise program rafta yeteri kadar ürün olmadığını kullanıcıya bildirir.
   + Eğer kullanıcının verdiği ürün miktarı raftaki ürün miktarına eşit ise ürün çıkışı yapılır ve ürünün raf değeri null olarak güncelenir.
 
-4.1 Ürünün Güncellenmesi:
-
-Kullanıcı ürünü tanımlarken, miktar bilgisini girerken veya ürüne ait bilgi girişlerinde hata yapabilir.
-
-Kullanıcı yaptığı hataları manuel olarak güncelleyebilsin, değiştirilebilsin
-
-mantığı ile ürünün tüm niteliklerine müdahale olanağı tanımlandı.
-
 5.1 Ürünün Listelenmesi:
 
-Ürünün bir zaman damgası ile ürüne ait field(alan) ları
-
-header(başlık) body(gövde) ve footer(alt bölüm) den oluşan bir template dizayn edildi.
-
-kullanıcının tabloya baktığında ürün ile ilgili bilgilerin tamamını göre bileceği bir liste olarak tasarlandı.
+  + Ürüne ait field'ları header ve body'den oluşan bir template dizayn edildi.
+  + Kullanıcının tabloya baktığında ürün ile ilgili bilgilerin tamamını görebileceği bir liste olarak tasarlandı.
